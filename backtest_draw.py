@@ -202,7 +202,8 @@ def analyze(rows: list[dict], total_entries: int) -> None:
     print(f"std dev (expected)      : {sd:,.0f}  ({exp_sd:,.0f} if uniform)")
     dupes = {e: c for e, c in Counter(entries).items() if c > 1}
     p_any_dup = 1 - math.prod((total_entries - i) / total_entries for i in range(n))
-    print(f"repeated winning entries: {len(dupes)} {dict(dupes) if dupes else ''}"
+    shown = dict(Counter(dupes).most_common(10))
+    print(f"repeated winning entries: {len(dupes)} {shown if dupes else ''}{' ...' if len(dupes) > 10 else ''}"
           f"  (chance of >=1 repeat if uniform: {p_any_dup:.4%})")
 
     print("\n" + "-" * 72)
