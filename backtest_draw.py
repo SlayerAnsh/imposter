@@ -211,10 +211,11 @@ def analyze(rows: list[dict], total_entries: int) -> None:
     buckets = max(2, min(20, n // 5))  # keep >= 5 expected per bucket
     stat, dof, p, counts = chi2_buckets(norm, buckets)
     width = total_entries / buckets
+    scale = min(1.0, 50 / max(counts))  # keep bars at most 50 chars wide
     print(f"Chi-square, {buckets} equal ticket ranges: chi2={stat:.2f}, dof={dof}, p={p:.4f}")
     for i, c in enumerate(counts):
         lo, hi = int(i * width) + 1, int((i + 1) * width)
-        print(f"  {lo:>9,} - {hi:>9,} : {'#' * c} {c}")
+        print(f"  {lo:>9,} - {hi:>9,} : {'#' * round(c * scale)} {c}")
     d, p_ks = ks_uniform(norm)
     print(f"Kolmogorov-Smirnov on winning entries : D={d:.4f}, p={p_ks:.4f}")
     d, p_ks_hex = ks_uniform(hex_norm)
